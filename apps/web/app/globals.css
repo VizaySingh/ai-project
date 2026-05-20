@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: #070914;
+  --fg: #f8fbff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 10% 5%, rgba(255, 176, 46, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 0%, rgba(24, 201, 135, 0.14), transparent 28%),
+    linear-gradient(135deg, #070914 0%, #101426 45%, #080b16 100%);
+  color: var(--fg);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(22px);
+}
+
+.light-shell {
+  color-scheme: light;
+  background:
+    radial-gradient(circle at 5% 0%, rgba(255, 176, 46, 0.18), transparent 32%),
+    radial-gradient(circle at 90% 0%, rgba(79, 140, 255, 0.14), transparent 32%),
+    #f7f9fc;
+  color: #111827;
+}
+
+.voice-bar {
+  animation: wave 1s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+.voice-bar:nth-child(2) { animation-delay: 120ms; }
+.voice-bar:nth-child(3) { animation-delay: 240ms; }
+.voice-bar:nth-child(4) { animation-delay: 360ms; }
+.voice-bar:nth-child(5) { animation-delay: 480ms; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.35); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}

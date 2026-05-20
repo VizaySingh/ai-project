@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  name         String?
+  createdAt    DateTime @default(now())
+  sites        Site[]
+}
+
+model Site {
+  id            String         @id @default(cuid())
+  ownerId       String
+  owner         User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name          String
+  domain        String
+  assistantName String         @default("Asha AI")
+  avatarUrl     String?
+  theme         String         @default("dark")
+  voiceEnabled  Boolean        @default(true)
+  languages     String         @default("hi,en")
+  createdAt     DateTime       @default(now())
+  pages         Page[]
+  chunks        KnowledgeChunk[]
+  conversations Conversation[]
+  uploads       Upload[]
+  events        VisitorEvent[]
+  integrations  Integration[]
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  siteId    String
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  url       String
+  title     String?
+  textHash  String?
+  indexedAt DateTime @default(now())
+
+  @@unique([siteId, url])
+}
+
+model KnowledgeChunk {
+  id        String   @id @default(cuid())
+  siteId    String
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  source    String
+  sourceUrl String?
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  siteId    String
+  site      Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  visitorId String
+  language  String    @default("hi")
+  mode      String    @default("text")
+  sentiment String?
+  leadEmail String?
+  leadPhone String?
+  createdAt DateTime  @default(now())
+  messages  Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String
+  content        String
+  createdAt      DateTime     @default(now())
+}
+
+model Upload {
+  id        String   @id @default(cuid())
+  siteId    String
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  filename  String
+  mimeType  String
+  status    String   @default("indexed")
+  createdAt DateTime @default(now())
+}
+
+model VisitorEvent {
+  id        String   @id @default(cuid())
+  siteId    String
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  type      String
+  pageUrl   String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model Integration {
+  id        String   @id @default(cuid())
+  siteId    String
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  provider  String
+  config    Json
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
